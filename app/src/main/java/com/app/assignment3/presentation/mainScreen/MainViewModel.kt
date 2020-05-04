@@ -25,7 +25,7 @@ class MainViewModel(private val petInteractor: PetInteractor, private val api: A
     val animalTypes = MutableLiveData<List<AnimalType>>()
     val breeds = MutableLiveData<List<Breed>>()
     val animals = MutableLiveData<List<Animal>>()
-
+    val progressStatus = MutableLiveData<String>()
     lateinit var lastDetailedAnimal : Animal
     fun getAnimalTypes() {
         petInteractor.getAnimalTypes()
@@ -33,6 +33,7 @@ class MainViewModel(private val petInteractor: PetInteractor, private val api: A
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy {
                 animalTypes.value = it
+                progressStatus.value = "hide"
             }
             .addTo(disposables)
     }
@@ -57,6 +58,16 @@ class MainViewModel(private val petInteractor: PetInteractor, private val api: A
             .addTo(disposables)
     }
 
+    fun getAnimals() {
+        petInteractor.getAnimals()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy {
+                animals.value = it
+            }
+            .addTo(disposables)
+    }
+
     fun initToken() {
         api.getAuthToken("client_credentials", Constants.ClientId, Constants.SecretKey)
             .subscribeOn(Schedulers.io())
@@ -64,12 +75,14 @@ class MainViewModel(private val petInteractor: PetInteractor, private val api: A
                 override fun onSubscribe(d: Disposable) {}
                 override fun onError(e: Throwable) {
                     Timber.d { "TokenRequest:  Could not get token : $e" }
+                    getAnimalTypes()
                 }
 
                 override fun onSuccess(value: TokenResponse) {
                     value.run {
                         Timber.d { "TokenRequest: Token was succesfully taken" }
                         Prefs.putToken(accessToken)
+                        progressStatus.postValue("show")
                         getAnimalTypes()
                     }
                 }

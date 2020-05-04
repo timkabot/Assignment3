@@ -35,11 +35,21 @@ class MainActivity : AppCompatActivity() {
 
     private fun initListeners() {
         animalTypeDropdown.setOnItemClickListener { _, _, _, _ ->
-            mainVm.getBreeds(animalTypeDropdown.text.toString())
-            breedsDropDown.setText("")
-            breedsDropDown.setAdapter(null)
-            progressBar.setCanceledOnTouchOutside(false)
-            progressBar.show()
+            val text = animalTypeDropdown.text.toString()
+            if(text == "Any"){
+                breedsDropDown.setText("Any")
+                breedsDropDown.setAdapter(null)
+
+                mainVm.getAnimals()
+            }
+            else {
+                mainVm.getBreeds(text)
+                breedsDropDown.setText("")
+                breedsDropDown.setAdapter(null)
+                progressBar.setCanceledOnTouchOutside(false)
+                progressBar.show()
+            }
+
         }
         breedsDropDown.setOnItemClickListener { _, _, _, _ ->
             mainVm.getAnimals(animalTypeDropdown.text.toString(), breedsDropDown.text.toString())
@@ -59,11 +69,24 @@ class MainActivity : AppCompatActivity() {
 
         mainVm.animals.observe(this,
             Observer { animals -> updateRecyclerData(animals) })
+
+        mainVm.progressStatus.observe(this,
+            Observer { status ->
+                when (status) {
+                    "show" -> {
+                        progressBar.show()
+                        progressBar.setCanceledOnTouchOutside(false)
+                    }
+                    "hide" -> {
+                        progressBar.hide()
+                    }
+                }
+
+            })
     }
 
     private fun initAnimalTypesDropdown(animalTypeNames: MutableList<String>) {
-        //animalTypeNames.add(0, "Any")
-        println("Initializing animal types ${animalTypeNames.size}")
+        animalTypeNames.add("Any")
         val typesAdapter: ArrayAdapter<String> = ArrayAdapter<String>(
             baseContext,
             R.layout.spinner_item,
@@ -73,7 +96,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initAnimalBreeds(animalBreedNames: MutableList<String>) {
-        //animalBreedNames.add(0, "Any")
         val breedsAdapter: ArrayAdapter<String> = ArrayAdapter<String>(
             baseContext,
             R.layout.spinner_item,
@@ -100,7 +122,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateRecyclerData(animals: List<Animal>) {
         if (animals.isEmpty())
-            Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "No items with this breed", Toast.LENGTH_SHORT).show()
         adapter.updateDate(animals.toList())
     }
 

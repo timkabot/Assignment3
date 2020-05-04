@@ -40,6 +40,8 @@ interface ApiService {
     @GET("v2/animals")
     fun getAnimals(@Query("type") type: String, @Query("breed") breed: String) : Observable<AnimalsResponse>
 
+    @GET("v2/animals")
+    fun getAnimals() : Observable<AnimalsResponse>
 
     companion object Factory {
         private fun createNetworkClient(isDebug: Boolean = true): OkHttpClient {

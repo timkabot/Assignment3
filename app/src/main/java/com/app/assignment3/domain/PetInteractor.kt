@@ -6,4 +6,6 @@ class PetInteractor(private val animalRepository: AnimalRepository) {
     fun getAnimalTypes() = animalRepository.getAnimalTypes()
     fun getBreeds(animalTypeName: String) = animalRepository.getBreeds(animalTypeName)
     fun getAnimals(type:String, breed: String) = animalRepository.getAnimals(type,breed)
+    fun getAnimals() = animalRepository.getAnimals()
+
 }

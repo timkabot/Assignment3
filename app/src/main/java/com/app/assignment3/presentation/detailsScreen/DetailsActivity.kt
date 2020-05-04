@@ -18,7 +18,7 @@ class DetailsActivity : AppCompatActivity(){
     private fun initData(){
         val animal = mainVm.lastDetailedAnimal
 
-        imageView2.downloadImage(animal.photos?.get(0)?.full)
+        imageView2.downloadImage(animal.photos?.get(0)?.small)
 
         name.text = "Name: " + animal.name
         age.text = "Age: " + animal.age

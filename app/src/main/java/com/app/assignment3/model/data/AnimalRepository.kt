@@ -70,4 +70,19 @@ class AnimalRepository(
         }
         return animalDao.getAllWithTypeAndBreed(type, breed)
     }
+
+    fun getAnimals() : Single<List<Animal>> {
+        if(hasInternet(context)){
+            api.getAnimals()
+                .subscribeOn(Schedulers.io())
+                .doOnError {  Timber.d{"Animals request error  request error: ${it.message}" }}
+                .subscribe {
+                    it.animals.forEach {  animal->
+                        animalDao.insertAnimal(animal)
+                    }
+                }
+                .addTo(compositeDisposable)
+        }
+        return animalDao.getAll()
+    }
 }
