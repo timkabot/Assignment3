@@ -12,8 +12,8 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.hw3.R
 import com.app.hw3.domain.entity.Pet
-import com.app.hw3.presentation.petDetail.DetailsActivity
 import com.app.hw3.presentation.adapter.ItemAdapter
+import com.app.hw3.presentation.petDetail.DetailsActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import toothpick.Toothpick
 import javax.inject.Inject
@@ -40,17 +40,16 @@ class PetListActivity : AppCompatActivity() {
 
     private fun initListeners() {
 
-        petSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        petSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(p0: AdapterView<*>?) {
             }
 
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 val text = petSpinner.selectedItem.toString()
-                if(text == "Any"){
+                if (text == "Any") {
                     breedSpinner.adapter = null
                     petListVm.getAnimals()
-                }
-                else {
+                } else {
                     petListVm.getBreeds(text)
                     breedSpinner.adapter = null
                     progressBar.setCanceledOnTouchOutside(false)
@@ -59,13 +58,16 @@ class PetListActivity : AppCompatActivity() {
             }
 
         }
-        breedSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        breedSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(p0: AdapterView<*>?) {
 
             }
 
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                petListVm.getAnimals(petSpinner.selectedItem.toString(), breedSpinner.selectedItem.toString())
+                petListVm.getAnimals(
+                    petSpinner.selectedItem.toString(),
+                    breedSpinner.selectedItem.toString()
+                )
 
             }
 
