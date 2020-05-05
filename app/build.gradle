@@ -52,9 +52,15 @@ dependencies {
     kapt("com.github.bumptech.glide:compiler:4.11.0")
     implementation("com.github.bumptech.glide:okhttp3-integration:4.9.0")
 
-    implementation 'org.koin:koin-android-viewmodel:2.0.1'
-
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
+
+    //DI
+    // ядро библиотеки
+    implementation 'com.github.stephanenicolas.toothpick:toothpick-runtime:3.1.0'
+    kapt("com.github.stephanenicolas.toothpick:toothpick-compiler:3.1.0")
+    // процессор аннотаций для кодогенерации
+    annotationProcessor 'com.github.stephanenicolas.toothpick:toothpick-compiler:3.1.0'
+
 
     implementation "androidx.room:room-runtime:2.2.5"
     kapt "androidx.room:room-compiler:2.2.5"
@@ -76,5 +82,8 @@ dependencies {
     implementation libraries.okhttpLogging
 
     implementation "androidx.security:security-crypto:1.0.0-rc01"
+
+    //routing
+    implementation 'ru.terrakok.cicerone:cicerone:5.0.0'
 
 }
